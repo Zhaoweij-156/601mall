@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：该mapper.xml映射文件的唯一标识 -->
+<mapper namespace="com.mall.dao.MemberDao">
+
+    <select id="getMemberById" parameterType="Long" resultType="com.mall.vo.MemberVO">
+        SELECT m.id, m.username,m.password,m.salt,m.nickname,m.mobile,m.email,m.avatar,m.gender,m.birth,m.city,m.job,m.sign,m.status,
+            m.create_time,m.modified_time,msi.consume_amount, msi.coupon_amount, msi.order_count, msi.return_order_count, msi.login_count
+        FROM t_member m, t_member_statistics_info msi
+        WHERE m.id = msi.member_id AND m.id = #{id}
+    </select>
+
+    <update id="changeStatus">
+        UPDATE t_member SET status = #{status} WHERE id = #{id}
+    </update>
+
+</mapper>

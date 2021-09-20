@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：该mapper.xml映射文件的唯一标识 -->
+<mapper namespace="com.mall.dao.ProductDao">
+
+    <!--如果查spu，加上GROUP BY  p.id-->
+    <select id="getAllProductForPage" resultType="com.mall.vo.ProductVO">
+        SELECT p.id as spu_id, k.id as sku_id, p.name as spu_name, k.sku_name, k.publish_status, k.sku_default_img as default_img
+        FROM t_spu p, t_sku k
+        WHERE p.id = k.spu_id
+        <if test="categoryId != null">
+            AND k.category_id = #{categoryId}
+        </if>
+    </select>
+
+    <select id="getIndexTop8" resultType="com.mall.vo.ProductIndexTop8VO">
+        SELECT p.id as spu_id, k.id as sku_id, p.name as spu_name, k.sku_name, k.sku_desc, k.publish_status, k.sku_default_img as default_img
+        FROM t_spu p, t_sku k
+        WHERE p.id = k.spu_id
+        GROUP BY p.id
+    </select>
+
+    <resultMap id="SkuVOResultMap" type="com.mall.vo.SkuVO">
+        <id property="id" column="sku_id" />
+        <result property="spuId" column="spu_id" />
+        <result property="skuName" column="sku_name" />
+        <result property="skuDesc" column="sku_desc" />
+        <result property="categoryId" column="category_id" />
+        <result property="skuDefaultImg" column="sku_default_img" />
+        <result property="originalPrice" column="original_price" />
+        <result property="presentPrice" column="present_price" />
+        <result property="saleCount" column="sale_count" />
+        <result property="publishStatus" column="publish_status" />
+        <result property="stock" column="stock" />
+        <result property="createTime" column="create_time" />
+        <result property="modifiedTime" column="modified_time" />
+        <collection property="skuImages" ofType="com.mall.pojo.SkuImages" column="sku_id"
+                    select="com.mall.dao.SkuImagesDao.getAllImgBySkuId" />
+    </resultMap>
+    <select id="getSkuBySkuId" resultMap="SkuVOResultMap">
+        SELECT k.id as sku_id, k.spu_id, k.sku_name, k.sku_desc, p.category_id, k.sku_default_img, k.original_price, k.present_price,
+                k.sale_count, k.publish_status, k.stock, p.create_time, p.modified_time
+        FROM t_spu p, t_sku k
+        WHERE p.id = k.spu_id AND k.id = #{skuId}
+    </select>
+    <select id="getSkuBySpuId" resultMap="SkuVOResultMap">
+        SELECT k.id as sku_id, k.spu_id, k.sku_name, k.sku_desc, p.category_id, k.sku_default_img, k.original_price, k.present_price,
+                k.sale_count, k.publish_status, k.stock, p.create_time, p.modified_time
+        FROM t_spu p, t_sku k
+        WHERE p.id = k.spu_id AND p.id = #{spuId}
+    </select>
+
+</mapper>

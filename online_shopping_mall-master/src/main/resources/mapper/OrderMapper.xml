@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：该mapper.xml映射文件的唯一标识 -->
+<mapper namespace="com.mall.dao.OrderDao">
+
+    <select id="getAllForPage" resultType="com.mall.vo.OrderPageVO">
+        SELECT id, member_id, order_sn, member_username, status, delete_status
+        FROM t_order
+        <if test="deleteStatus != null">
+            WHERE delete_status = #{deleteStatus}
+        </if>
+    </select>
+
+    <resultMap id="OrderVOResultMap" type="com.mall.vo.OrderVO">
+        <id property="id" column="id" />
+        <result property="member_id" column="memberId" />
+        <result property="order_sn" column="orderSn" />
+        <result property="member_username" column="memberUsername" />
+        <result property="total_amount" column="totalAmount" />
+        <result property="pay_amount" column="payAmount" />
+        <result property="freight_amount" column="freightAmount" />
+        <result property="pay_type" column="payType" />
+        <result property="status" column="status" />
+        <result property="delivery_company" column="deliveryCompany" />
+        <result property="delivery_sn" column="deliverySn" />
+        <result property="auto_confirm_day" column="autoConfirmDay" />
+        <result property="receiver_name" column="receiverName" />
+        <result property="receiver_phone" column="receiverPhone" />
+        <result property="receiver_post_code" column="receiverPostCode" />
+        <result property="receiver_province" column="receiverProvince" />
+        <result property="receiver_city" column="receiverCity" />
+        <result property="receiver_region" column="receiverRegion" />
+        <result property="receiver_detail_address" column="receiverDetailAddress" />
+        <result property="node" column="node" />
+        <result property="confirm_status" column="confirmStatus" />
+        <result property="delete_status" column="deleteStatus" />
+        <result property="pay_time" column="payTime" />
+        <result property="delivery_time" column="deliveryTime" />
+        <result property="receive_time" column="receiveTime" />
+        <result property="create_time" column="createTime" />
+        <result property="modified_time" column="modifiedTime" />
+        <collection property="orderItems" ofType="com.mall.pojo.OrderItem" column="id"
+                    select="com.mall.dao.OrderItemDao.getOrderItemsByOrderId" />
+    </resultMap>
+    <select id="getDetailById" resultMap="OrderVOResultMap">
+        SELECT id, member_id, order_sn, member_username, total_amount, pay_amount, freight_amount, pay_type, status, delivery_company, delivery_sn,
+                auto_confirm_day, receiver_name, receiver_phone, receiver_post_code, receiver_province, receiver_city, receiver_region, receiver_detail_address,
+                note, confirm_status, delete_status, pay_time, delivery_time, receive_time, create_time, modified_time
+        FROM t_order
+        WHERE id = #{id}
+    </select>
+
+</mapper>

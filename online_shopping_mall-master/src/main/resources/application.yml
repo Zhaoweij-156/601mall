@@ -1,0 +1,67 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://0.0.0.0:3306/0000?serverTimezone=Asia/Shanghai
+    username: 0000
+    password: ****************
+  redis:
+    host: 0.0.0.0
+    port: 6379
+    password: **************
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB # 控制上传图片的大小
+      max-request-size: 10MB
+  rabbitmq:
+    host: 0.0.0.0.0
+    username: ***************
+    password: ***************
+    # 虚拟主机
+    virtual-host: /***
+    port: 5672
+    listener:
+      simple:
+        # 消费者最小数量
+        concurrency: 1
+        # 消费者最大数量
+        max-concurrency: 1
+        # 限制消费者每次只处理一条消息，处理完再继续下一条消息
+        prefetch: 1
+        # 启动时是否默认启动容易，默认true
+        auto-startup: true
+        # 被拒绝时重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+        # 发布重试，默认false
+        enabled: true
+        # 重试时间 默认 1000ms
+        initial-interval: 1000ms
+        # 重试最大次数
+        max-attempts: 3
+        # 重试最大间隔时间 默认1000ms
+        max-interval: 1000ms
+        # 重试的间隔乘数
+        multiplier: 1
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleteStatus  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+      table-prefix: t_
+  configuration:
+    map-underscore-to-camel-case: true # 开启驼峰命名
+  mapper-locations: classpath*:/mapper/**/*.xml # 指定mapper的位置
+logging:
+  level:
+    com:
+      mall:
+        dao: debug
+

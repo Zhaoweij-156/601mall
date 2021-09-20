@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：该mapper.xml映射文件的唯一标识 -->
+<mapper namespace="com.mall.dao.OrderItemDao">
+
+    <select id="getOrderItemsByOrderId" resultType="com.mall.pojo.OrderItem" parameterType="java.lang.Long">
+        SELECT id, order_id, order_sn, spu_id, spu_name, category_id, sku_id, sku_name, sku_img, sku_original_price, sku_present_price, sku_count
+        FROM t_order_item
+        WHERE order_id = #{orderId}
+    </select>
+
+</mapper>
